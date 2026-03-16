@@ -1,0 +1,64 @@
+---
+title: 'Introduction & Stack'
+description: 'Overview and technology stack of the MINPI IT Asset Management System'
+icon: 'house'
+---
+
+## System Description
+
+**MINPI Technology** is an enterprise-grade IT Asset Management (ITAM) and Help Desk system. It is designed to manage computing equipment, peripherals, printers, and technical support services for government organizations.
+
+The system enables detailed tracking of all technological assets, support ticket management, and strict equipment assignment control to offices and coordinations.
+
+## System Objectives
+
+<CardGroup cols={2}>
+  <Card title="Centralized Inventory" icon="computer">
+    Complete registration of computers, printers, monitors, keyboards, voltage regulators, phones, and Starlinks.
+  </Card>
+  <Card title="Support Management" icon="ticket">
+    Advanced ticket system for tracking technical issues and SLA monitoring.
+  </Card>
+  <Card title="Assignment Control" icon="building">
+    Equipment tracking by office, coordination, and assigned personnel.
+  </Card>
+  <Card title="Forensic Auditing" icon="shield-halved">
+    Change logging for all system resources to ensure accountability.
+  </Card>
+</CardGroup>
+
+## Key Features
+
+* **Multi-user & RBAC:** Support for multiple users with granular, dynamic roles.
+* **OAuth2 Authentication:** Decoupled authentication using Laravel Passport.
+* **Modern Admin Panel:** Built on Filament v3 for a highly reactive SPA-like experience.
+* **Reporting:** Advanced data export to Excel and real-time dashboard widgets.
+* **Event Management:** Integrated calendar with FullCalendar for scheduling maintenance.
+
+---
+
+## Technology Stack
+
+The system is built on a modern, robust PHP ecosystem, prioritizing type safety, performance, and maintainability.
+
+<CardGroup cols={2}>
+  <Card title="Backend & Core" icon="server">
+    * **PHP:** ^8.2
+    * **Framework:** Laravel ^11.9
+    * **Database:** PostgreSQL 14+
+  </Card>
+  <Card title="Admin UI" icon="desktop">
+    * **Panel:** FilamentPHP ^3.2
+    * **State Management:** Livewire & Alpine.js
+    * **Styling:** Tailwind CSS
+  </Card>
+  <Card title="Security & Auth" icon="lock">
+    * **OAuth Server:** Laravel Passport ^13.0
+    * **Permissions:** Filament Shield / Spatie
+  </Card>
+  <Card title="Utilities" icon="toolbox">
+    * **Auditing:** Spatie Activity Log
+    * **Exports:** Filament Excel
+    * **DevOps:** Laravel Sail (Docker)
+  </Card>
+</CardGroup>
