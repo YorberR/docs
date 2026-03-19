@@ -1,0 +1,82 @@
+---
+title: 'Installation & Maintenance'
+description: 'Guide for deploying, configuring, and maintaining the system'
+icon: 'terminal'
+---
+
+## Prerequisites
+
+Before starting, ensure your server meets the following requirements:
+* **PHP:** 8.2+
+* **Composer:** 2.x
+* **Database:** PostgreSQL 14+
+* **Node.js:** 18+ (for asset compilation)
+
+## Installation Guide
+
+<Steps>
+  <Step title="Clone and Install Dependencies">
+    Clone the repository and install PHP dependencies.
+    ```bash
+    git clone <repository> minpi_tecnologia
+    cd minpi_tecnologia
+    composer install
+    ```
+  </Step>
+  <Step title="Environment Setup">
+    Copy the environment file and generate the app key.
+    ```bash
+    cp .env.example .env
+    php artisan key:generate
+    ```
+    *Make sure to configure your `DB_*` and `PASSPORT_*` variables in the `.env` file.*
+  </Step>
+  <Step title="Database & Authentication">
+    Run migrations, install Passport, and setup Shield permissions.
+    ```bash
+    php artisan migrate
+    php artisan passport:install
+    php artisan shield:generate --all
+    php artisan shield:super-admin
+    ```
+  </Step>
+  <Step title="Compile Assets">
+    Build the Filament custom themes and assets.
+    ```bash
+    npm install
+    npm run build
+    ```
+  </Step>
+</Steps>
+
+---
+
+## Auditing and Logs
+
+The system features **Forensic Auditing** using `Spatie Activity Log`. This is critical for government environments to maintain data integrity.
+
+```php
+// Every change is automatically tracked
+use Spatie\Activitylog\Models\Activity;
+
+// Get latest activities
+Activity::latest()->take(10)->get();
+
+// Find who modified a specific computer
+$computadora->activities;
+```
+
+---
+
+## Useful Commands
+<AccordionGroup>
+<Accordion title="Cache & Optimization (Production)" icon="rocket">
+`bash php artisan config:cache php artisan route:cache php artisan view:cache php artisan optimize`
+</Accordion>
+<Accordion title="Troubleshoot Permissions" icon="shield-keyhole">
+`bash php artisan shield:generate --all php artisan permission:cache-reset`
+</Accordion>
+<Accordion title="System Update Flow" icon="arrows-rotate">
+`bash php artisan down git pull origin main composer install --no-dev --optimize-autoloader php artisan migrate --force php artisan up`
+</Accordion>
+</AccordionGroup>

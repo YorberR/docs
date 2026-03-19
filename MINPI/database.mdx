@@ -1,0 +1,87 @@
+---
+title: 'Database & Models'
+description: 'Entity-Relationship diagrams and Eloquent ORM models'
+icon: 'database'
+---
+
+## Entity-Relationship Diagram
+
+The database is built on **PostgreSQL 14+** and handles intricate connections between hardware, components, locations, and support tickets.
+
+```mermaid
+erDiagram
+    COMPUTADORA ||--o{ SOPORTE : has
+    COMPUTADORA }o--|| OFICINA : located_in
+    COMPUTADORA }o--|| COORDINACION : belongs_to
+    COMPUTADORA }o--|| MARCA : is_brand
+    COMPUTADORA }o--|| STATUS : has_status
+    COMPUTADORA }o--|| TIPO_PC : is_type
+    COMPUTADORA }o--|| SISTEMA_OPERATIVO : uses
+    COMPUTADORA }o--|| TECLADO : assigned
+    COMPUTADORA }o--|| REGULADOR : connected_to
+    COMPUTADORA ||--o{ COMPUTADORA_MONITORES : has
+    
+    IMPRESORA ||--o{ SOPORTE : has
+    IMPRESORA }o--|| OFICINA : located_in
+    IMPRESORA }o--|| MARCA : is_brand
+    
+    MONITOR }o--|| MARCA : is_brand
+    MONITOR }o--|| OFICINA : located_in
+    MONITOR ||--o{ COMPUTADORA_MONITORES : assigned_to
+    
+    SOPORTE ||--o{ TECNICO : assigned_to
+    TECNICO }o--|| USER : is
+```
+
+## Core Models Implementation
+The system uses Laravel's Eloquent ORM with over 28 strictly typed models.
+
+<CodeGroup>
+
+```php
+// app/Models/Computadora.php
+class Computadora extends Model
+{
+    use HasFactory, SoftDeletes, LogsActivity;
+    protected $fillable = [
+        'tipo_pc_id', 'marca_id', 'modelo', 'serial',
+        'numero_bien', 'procesador', 'memoria_ram',
+        'ip', 'mac', 'status_id', 'oficina_id'
+        // ...
+    ];
+
+    // Relationships
+    public function oficina(): BelongsTo {}
+    public function marca(): BelongsTo {}
+    public function monitores(): BelongsToMany {}
+    public function soportes(): HasMany {}
+}
+```
+
+```php
+// app/Models/Soporte.php
+class Soporte extends Model
+{
+    protected $fillable = [
+        'titulo', 'descripcion', 'estado', 
+        'prioridad', 'categoria', 'oficina_id',
+        'computadora_id', 'finalizado'
+    ];
+
+    // Accessors & Scopes
+    public function getEstaAtrasadoAttribute(): bool {}
+    public function scopeEsteMes($query) {}
+    public function scopeAtrasados($query) {}
+}
+```
+
+</CodeGroup>
+
+## Database Seeders & Factories
+To facilitate testing and deployment, the system includes comprehensive seeders and factories:
+
+- `RolesSeeder`: Creates basic roles and permissions.
+
+- `FactoriesSeeder`: Generates massive test data (Computers, Printers, Tickets) using Faker.
+
+- **Catalog Seeders**: Pre-fills operational statuses, brands, OS versions, and hardware types.
