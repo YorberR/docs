@@ -1,0 +1,107 @@
+---
+title: 'Architecture & Security'
+description: 'System architecture, OAuth2 flow, and Role-Based Access Control (RBAC)'
+icon: 'sitemap'
+---
+
+## System Architecture
+
+The system follows a modern decoupled architecture where the API and Admin Panel (Filament) consume a centralized database, while authentication is handled via OAuth2.
+
+```mermaid
+graph TB
+    subgraph "Frontend"
+        A[Web Browser]
+    end
+    
+    subgraph "minpi_tecnologia Port 8000"
+        B[Laravel 11]
+        C[Filament Panel]
+        D[Livewire]
+        E[Laravel Passport]
+    end
+    
+    subgraph "Database"
+        G[(PostgreSQL)]
+    end
+    
+    A --> B
+    B --> C
+    C --> D
+    B --> E
+    E --> G
+    B --> G
+```
+---
+
+## OAuth2 Authentication System
+The system uses Laravel Passport to implement OAuth2 locally, acting as both an OAuth server and client.
+
+**Authentication Flow**
+
+```mermaid
+sequenceDiagram
+    participant U as User
+    participant T as minpi_tecnologia
+    participant O as OAuth Server
+    
+    U->>T: Access /login
+    T->>O: Redirect to /oauth/authorize
+    O->>U: Authorization page
+    U->>O: Approve access
+    O->>T: Callback with code
+    T->>O: Exchange for token
+    O->>T: Access Token + Refresh Token
+    T->>U: Access Dashboard
+
+<Note>
+The PASSPORT_CLIENT_ID and PASSPORT_CLIENT_SECRET values must be provided by the external OAuth server if one is used in production.
+</Note>
+```
+
+---
+
+## Roles and Permissions (RBAC)
+Security is enforced using Filament Shield and Spatie Permission, ensuring dynamic access policies based on the principle of least privilege.
+
+**Role Hierarchy**
+
+```mermaid
+graph TD
+    A[Super Admin] --> B[Coordinator]
+    B --> C[Supervisor]
+    C --> D[Technician]
+    
+    style A fill:#0D9373,color:#fff
+    style B fill:#10B981,color:#fff
+    style C fill:#34D399,color:#fff
+    style D fill:#6EE7B7,color:#000
+```
+
+<AccordionGroup>
+<Accordion title="Super Admin" icon="crown">
+Full system access. Can manage all resources, users, and configure dynamic roles.
+</Accordion>
+<Accordion title="Coordinator" icon="building">
+Management access (no delete). Manages equipment, assignments, and offices.
+</Accordion>
+<Accordion title="Supervisor" icon="eye">
+Supervision access. Monitors technicians and support tickets.
+</Accordion>
+<Accordion title="Technician" icon="wrench">
+Basic access. Can only read and update their assigned support tickets.
+</Accordion>
+</AccordionGroup>
+
+---
+
+## Admin Panel (Filament)
+The administrative interface is built with Filament v3, providing a reactive SPA-like experience using Livewire and Alpine.js.
+
+**Key Resources**:
+
+- `ComputadoraResource`: Computer management with CRUD, Filters, Export, and Activity Timeline.
+
+- `SoporteResource`: Support tickets management with States and Priorities.
+
+- `ActivityResource`: Read-only forensic logs interface.

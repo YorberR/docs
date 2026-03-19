@@ -22,10 +22,10 @@
           {
             "group": "MINPI - Technology System",
             "pages": [
-              "minpi/introduction",
-              "minpi/architecture",
-              "minpi/database",
-              "minpi/installation"
+              "MINPI/introduction",
+              "MINPI/architecture",
+              "MINPI/database",
+              "MINPI/installation"
             ]
           }
         ]
