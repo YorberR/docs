@@ -20,12 +20,32 @@
             ]
           },
           {
-            "group": "MINPI - Technology System",
+            "group": "Microservices",
             "pages": [
-              "MINPI/introduction",
-              "MINPI/architecture",
-              "MINPI/database",
-              "MINPI/installation"
+              "Microservices/architecture",
+              "Microservices/api-reference",
+              "Microservices/quickstart"
+            ]
+          },
+          {
+            "group": "MINPI — Government Ecosystem",
+            "pages": [
+              {
+                "group": "MINPITECH - Technology System",
+                "pages": [
+                  "minpi-tech/introduction",
+                  "minpi-tech/architecture",
+                  "minpi-tech/database"
+                ]
+              },
+              {
+                "group": "RISIN — Social Registry",
+                "pages": [
+                  "risin/introduction",
+                  "risin/architecture",
+                  "risin/database"
+                ]
+              }
             ]
           }
         ]

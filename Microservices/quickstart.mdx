@@ -1,0 +1,62 @@
+---
+title: 'Local Quickstart'
+description: 'Spin up the entire microservices ecosystem locally in seconds using Docker Compose.'
+icon: 'docker'
+---
+
+## Developer Experience (DX) First
+
+To ensure a seamless onboarding process for other engineers, this architecture is fully containerized. You do not need to install Node.js, TypeScript, or configure a local database to run this project. 
+
+The entire ecosystem (API Gateway, Content Services, and DB Service) is orchestrated via Docker.
+
+---
+
+## Running the Project
+
+<Steps>
+  <Step title="Clone the Repository">
+    First, clone the project to your local machine and navigate into the root directory.
+    ```bash
+    git clone [https://github.com/YorberR/social-network-microservices.git](https://github.com/YorberR/social-network-microservices.git)
+    cd social-network-microservices
+    ```
+  </Step>
+  
+  <Step title="Environment Variables (Optional)">
+    The `docker-compose.yml` file is pre-configured with default environment variables for local testing (including default PostgreSQL credentials). If you wish to override them, create a `.env` file in the root directory.
+    
+    ```env .env
+    JWT_SECRET=my_super_secret_key
+    ```
+  </Step>
+
+  <Step title="Spin up the Containers">
+    Run the following command to build the images and start all three microservices in detached mode.
+    
+    ```bash
+    docker-compose up -d --build
+    ```
+  </Step>
+
+  <Step title="Verify the Services">
+    Once the containers are running, the services will be mapped to the following local ports:
+
+    * **API Service (Gateway):** `http://localhost:3000`
+    * **Content Service (Posts):** `http://localhost:3001`
+    * **DB Service:** `http://localhost:3002`
+    * **Follows & Likes:** `http://localhost:3003` / `http://localhost:3004`
+
+    You can now send a `POST` request to `http://localhost:3000/api/auth/login` to start interacting with the API!
+  </Step>
+</Steps>
+
+---
+
+## Stopping the Ecosystem
+
+To gracefully stop and remove the containers, networks, and volumes created by `up`, simply run:
+
+```bash
+docker-compose down
+```

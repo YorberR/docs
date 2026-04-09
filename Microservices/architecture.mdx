@@ -1,0 +1,85 @@
+---
+title: 'Architecture & Deployment'
+description: 'Microservices ecosystem, API Gateway pattern, and automated CI/CD pipeline.'
+icon: 'server'
+---
+
+## System Architecture
+
+The application transitions from a traditional monolith to a distributed architecture. It uses an **API Gateway** pattern where the main API Service acts as the single entry point, handling security before routing traffic to internal containerized services.
+
+```mermaid
+graph TD
+    Client([Client / App / Postman])
+    
+    subgraph "Render Cloud (Web Services)"
+        API[API Gateway\nPort: 3000]
+        CONTENT[Content Service\nPorts: 3001, 3003, 3004]
+        DB_SVC[Database Service\nPort: 3002]
+    end
+    
+    subgraph "External Cloud"
+        NEON[(Neon Serverless PostgreSQL)]
+    end
+
+    Client -- HTTP / Bearer JWT --> API
+    
+    API -- Validated Traffic --> CONTENT
+    CONTENT -- Internal Request --> DB_SVC
+    
+    DB_SVC -- SSL Connection --> NEON
+```
+
+<Note>
+Multi-Process Container Optimization: To optimize cloud resources on Render's free tier, the Content Service runs multiple Node.js processes (Posts, Follows, Likes) within a single Docker container using a shell script orchestration.
+</Note>
+
+---
+
+## Service Distribution
+
+The ecosystem is divided into specific domain-driven services:
+
+| Service Name | Environment | Port | Primary Responsibility |
+| :--- | :--- | :--- | :--- |
+| **api-service** | Docker (Render) | `3000` | Auth validation, Users management, and request routing. |
+| **content-service** | Docker (Render) | `3001, 3003, 3004` | Handles Posts, Follows, and Likes logic. |
+| **db-service** | Docker (Render) | `3002` | Abstracted database access layer. |
+
+---
+
+## CI/CD Pipeline (GitHub Actions)
+
+The deployment strategy is fully automated and vendor-agnostic. Every push to the `main` branch triggers a workflow that builds the microservices into Docker images and pushes them to a centralized registry.
+
+```mermaid
+sequenceDiagram
+    participant D as Developer
+    participant G as GitHub (main)
+    participant A as GitHub Actions
+    participant H as Docker Hub
+    participant R as Render Cloud
+    
+    D->>G: git push origin main
+    G->>A: Trigger CI/CD Workflow
+    A->>A: Build Docker Images
+    A->>H: Push images with :latest tag
+    H-->>R: Webhooks trigger redeployment
+    R->>R: Pull new images & spin up containers
+```
+
+Infrastructure Stack
+<CardGroup cols={2}>
+<Card title="Compute" icon="cloud">
+Render: Hosts the containerized web services, automatically pulling the latest images from Docker Hub.
+</Card>
+<Card title="Database" icon="database">
+Neon: Provides a highly available, serverless PostgreSQL instance with persistent storage.
+</Card>
+<Card title="Container Registry" icon="docker">
+Docker Hub: Acts as the centralized repository for all built microservice images.
+</Card>
+<Card title="Automation" icon="github">
+GitHub Actions: Handles the continuous integration and delivery pipeline securely using repository secrets.
+</Card>
+</CardGroup>
