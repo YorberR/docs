@@ -20,6 +20,20 @@
             ]
           },
           {
+            "group": "Capital Flux — Mobile FinTech",
+            "pages": [
+              "capital-flux/introduction",
+              {
+                "group": "Architecture",
+                "pages": [
+                  "capital-flux/architecture/overview",
+                  "capital-flux/architecture/offline-first",
+                  "capital-flux/architecture/database"
+                ]
+              }
+            ]
+          },
+          {
             "group": "Microservices",
             "pages": [
               "Microservices/architecture",
@@ -69,17 +83,8 @@
       "href": "https://www.yorberrojas.me/"
     }
   },
-  "contextual": {
-    "options": [
-      "copy",
-      "chatgpt",
-      "claude"
-    ]
-  },
-  "footer": {
-    "socials": {
-      "github": "https://github.com/yorberr",
-      "linkedin": "https://linkedin.com/in/yorberrojas"
-    }
+  "footerSocials": {
+    "linkedin": "https://www.linkedin.com/in/yorberrojas/",
+    "github": "https://github.com/YorberR"
   }
 }

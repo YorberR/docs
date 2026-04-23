@@ -1,0 +1,50 @@
+---
+title: 'Database & Security'
+description: 'PostgreSQL schema and Row Level Security (RLS) policies.'
+icon: 'shield-halved'
+---
+
+## Schema Design
+
+The database is designed to handle multi-currency transactions with precision. All monetary values are stored as `NUMERIC` to avoid floating-point errors.
+
+### Wallets Table
+
+```sql
+CREATE TABLE wallets (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES auth.users(id),
+  name TEXT NOT NULL,
+  currency_code TEXT NOT NULL, -- ISO 4217 (e.g., 'VES', 'USD')
+  balance NUMERIC DEFAULT 0,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT now()
+);
+```
+
+---
+
+### Row Level Security (RLS)
+
+Security is not just in the app; it's in the database. Every query is filtered by the user's UUID.
+
+```sql
+-- Policies
+ALTER TABLE transactions ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Users can only view their own transactions"
+ON transactions FOR SELECT
+USING (auth.uid() = user_id);
+```
+
+---
+
+### Security Layers
+
+1. **Identity:** Supabase Auth (Email/Google).
+
+2. **Access:** Database RLS Policies.
+
+3. **Local:** Biometric Lock (FaceID/Fingerprint) + Session PIN.
+
+4. **Transport:** TLS 1.3 encryption for all API calls.

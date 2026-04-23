@@ -1,0 +1,33 @@
+---
+title: 'Introduction'
+description: 'Digital wallet engineered for volatile and hyperinflationary economies.'
+icon: 'rocket'
+---
+
+## The Vision
+
+**Capital Flux** is not just a wallet; it's a financial shield. Engineered for economies like Venezuela's, where currency depreciates rapidly, the app provides the tools necessary to preserve purchasing power through real-time data and offline resilience.
+
+### Key Features
+
+<CardGroup cols={2}>
+  <Card title="Universal Conversion" icon="arrows-rotate">
+    Charts and dashboards now support on-the-fly conversion between 14 active currencies using the new Global Rates Adapter.
+  </Card>
+  <Card title="Cash Flow Intelligence" icon="chart-mixed">
+    Quarterly trends with Net/Income/Expense toggles to visualize financial health across multiple wallets.
+  </Card>
+  <Card title="Multi-Source Oracle" icon="server">
+    Real-time rates from BCV (Official), Parallel markets, and Binance P2P (USDT).
+  </Card>
+  <Card title="Biometric Security" icon="fingerprint">
+    Hardware-level protection with AES-256 local encryption for offline data.
+  </Card>
+</CardGroup>
+
+## Tech Stack
+
+* **Mobile:** React Native (Expo SDK 55) & TypeScript 5.9.
+* **Database:** Supabase (Remote) & WatermelonDB/AsyncStorage (Local Cache).
+* **API Integration:** `pydolarve.org` (Regional) & `open.er-api.com` (Global Adapter).
+* **Testing:** Jest (20+ test cases for currency logic).

@@ -1,0 +1,27 @@
+---
+title: 'Offline-First Engine'
+description: 'Resilience strategy for unstable network environments.'
+icon: 'wifi-slash'
+---
+
+## The Resilience Strategy
+
+In volatile environments, internet is a luxury. Capital Flux treats it as an intermittent resource.
+
+### 1. Persistent Caching
+We implement a dual-layer cache:
+* **State Cache:** Using WatermelonDB for high-performance relational queries while offline.
+* **Rate Cache:** Exchange rates are timestamped. If the network fails, the app uses the "Last Known Rate" with an "Offline" visual indicator.
+
+### 2. The Mutation Queue
+Any action taken offline (New Transaction, Transfer, Budget) is stored as a **Mutation Job**.
+
+| Step | Action | Status |
+| :--- | :--- | :--- |
+| **1** | Local Write | Immediate (Optimistic) |
+| **2** | Queue Job | Pending |
+| **3** | NetInfo Detect | Checking Connection |
+| **4** | Push to Supabase | Success / Conflict Resolution |
+
+### 3. Conflict Resolution
+We use a **Timestamp-based "Last Write Wins"** strategy. Since the app is primarily personal (single-user), conflict complexity is low, but data integrity is maintained through strict Supabase RLS policies.
